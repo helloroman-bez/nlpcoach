@@ -174,7 +174,7 @@ app.post("/webhook", async (req, res) => {
           description: "Доступ к AI-коучу, 4 техникам НЛП и дневнику инсайтов на 30 дней",
           payload: "monthly_sub",
           currency: "XTR",        // XTR = Telegram Stars
-          prices: [{ label: "Подписка 30 дней", amount: 100 }], // 100 звёзд
+          prices: [{ label: "Подписка 30 дней", amount: 1 }], // 1 звёзда
           provider_token: "",      // для Stars оставляем пустым
         }),
       }
