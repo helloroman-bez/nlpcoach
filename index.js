@@ -115,9 +115,31 @@ app.post("/webhook", async (req, res) => {
     return res.json({ ok: true });
   }
 
-  // Команда /start — отправляем кнопку открытия Mini App
-  if (update.message?.text === "/start") {
+  // Команда /start — с параметром subscribe сразу отправляем инвойс
+  if (update.message?.text?.startsWith("/start")) {
     const userId = update.message.from.id;
+    const firstName = update.message.from.first_name || "друг";
+    const param = update.message.text.split(" ")[1];
+
+    if (param === "subscribe") {
+      await fetch(
+        `https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendInvoice`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: userId,
+            title: "NLP Коуч — подписка на месяц",
+            description: "Доступ к AI-коучу, 4 техникам НЛП и дневнику инсайтов на 30 дней",
+            payload: "monthly_sub",
+            currency: "XTR",
+            prices: [{ label: "Подписка 30 дней", amount: 1 }],
+            provider_token: "",
+          }),
+        }
+      );
+      return res.json({ ok: true });
+    }
     const firstName = update.message.from.first_name || "друг";
     await fetch(
       `https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
@@ -152,7 +174,7 @@ app.post("/webhook", async (req, res) => {
           description: "Доступ к AI-коучу, 4 техникам НЛП и дневнику инсайтов на 30 дней",
           payload: "monthly_sub",
           currency: "XTR",        // XTR = Telegram Stars
-          prices: [{ label: "Подписка 30 дней", amount: 1 }], // 1 звёзда
+          prices: [{ label: "Подписка 30 дней", amount: 100 }], // 100 звёзд
           provider_token: "",      // для Stars оставляем пустым
         }),
       }
